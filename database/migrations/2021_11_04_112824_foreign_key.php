@@ -13,14 +13,14 @@ class ForeignKey extends Migration
      */
     public function up()
     {
-        Schema::table('Files', function (Blueprint $table) {
-            $table->unsignedBigInteger('agrupation')->unsigned();
-            $table->foreign('agrupation')->references('id')->on('agrupations');
-            $table->bigInteger('user')->unsigned();
-            $table->foreign('user')->references('id')->on('users');
+        Schema::table('files', function (Blueprint $table) {
+            $table->unsignedBigInteger('agrupation_id')->unsigned();
+            $table->foreign('agrupation_id')->references('id')->on('agrupations');
+            $table->bigInteger('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users');
         });
 
-        Schema::table('External_passes', function (Blueprint $table) {
+        Schema::table('external_passes', function (Blueprint $table) {
             $table->unsignedBigInteger('from')->unsigned();
             $table->foreign('from')->references('id')->on('offices');
             $table->unsignedBigInteger('to')->unsigned();
@@ -31,7 +31,7 @@ class ForeignKey extends Migration
             $table->foreign('file')->references('id')->on('files');
         });
 
-        Schema::table('Internal_passes', function (Blueprint $table) {
+        Schema::table('internal_passes', function (Blueprint $table) {
             $table->unsignedBigInteger('from')->unsigned();
             $table->foreign('from')->references('id')->on('users');
             $table->unsignedBigInteger('to')->unsigned();

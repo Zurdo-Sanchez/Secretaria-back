@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+
 class Files extends Model
 {
     use HasFactory;
@@ -16,14 +17,18 @@ class Files extends Model
         'initiator',
         'concept',
         'status',
-        'agrupation',
-        'user'
+        'agrupation_id',
+        'user_id'
     ];
 
-    public function Agrupation(){
-        return $this->hasOne(Agrupation::class,'agrupation','id');
+    public function Agrupation()
+    {
+        return $this->belongsTo(Agrupation::class,'agrupation_id');
     }
-    public function User(){
-        return $this->belongsTo(User::class,'user');
+    public function User()
+    {
+        return $this->belongsTo(User::class,'user_id');
     }
+
+
 }

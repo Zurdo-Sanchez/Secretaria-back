@@ -1,8 +1,9 @@
 <?php
 
+use App\Http\Controllers\AgrupationsController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FilesController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -38,5 +39,14 @@ Route::group([
     'prefix' => 'files'
   ], function() {
         Route::get('', [FilesController::class, 'store']);
+        Route::post('/update', [FilesController::class, 'edit']);
+        Route::post('/search', [FilesController::class, 'search']);
         Route::get('total', [FilesController::class, 'total']);
+  });
+
+Route::group([
+    'prefix' => 'agrupations'
+  ], function() {
+        Route::get('', [AgrupationsController::class, 'store']);
+
   });

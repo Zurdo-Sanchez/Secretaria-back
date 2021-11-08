@@ -33,9 +33,11 @@ class AgrupationsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-        //
+        $agrupations = Agrupation::orderBy("name", "asc")->get();
+
+        return response()->json($agrupations, 200);
     }
 
     /**

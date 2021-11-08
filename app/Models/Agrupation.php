@@ -14,3 +14,4 @@ class Agrupation extends Model
         'Observations'
     ];
 }
+

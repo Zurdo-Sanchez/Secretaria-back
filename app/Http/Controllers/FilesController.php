@@ -7,84 +7,28 @@ use Illuminate\Http\Request;
 
 class FilesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store()
     {
+        $files = Files::orderBy("updated_at", "asc")
+            ->Paginate(25);
 
-        return response(
-            Files::orderBy("updated_at", "asc")
-            ->Paginate(25)
-        );
+            foreach ($files as $file) {
+                $file->Agrupation;
+                $file->User;
+            }
+
+            return response()->json($files, 200);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Files  $files
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Files $files)
+    public function edit(Request $request)
     {
-        //
-    }
+        $file = Files::find($request->id);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Files  $files
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Files $files)
-    {
-        //
-    }
+        $file->agrupation_id = $request->agrupation_id;
+        $file->save();
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Files  $files
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Files $files)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Files  $files
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Files $files)
-    {
-        //
+        return response()->json('File Update', 200);
     }
 
     public function total(){
@@ -99,6 +43,35 @@ class FilesController extends Controller
         ];
 
         return response()->json($totalfile, 200);
+
+    }
+
+    public function search(Request $request){
+
+        $dependence_number = $request->search_dependence_number;
+        $central_number  = $request->search_central_number;
+        $final_number  = $request->search_final_number;
+        $initiator  = $request->search_initiator;
+        $concept  = $request->search_concept;
+        $agrupation_id  = $request->search_agrupation_id;
+        $status  = $request->search_status;
+
+    $files=Files::where('dependence_number','LIKE','%'.$dependence_number.'%')
+    ->where('central_number','LIKE','%'.$central_number.'%')
+    ->where('final_number','LIKE','%'.$final_number.'%')
+    ->where('initiator','LIKE','%'.$initiator.'%')
+    ->where('concept','LIKE','%'.$concept.'%')
+    ->where('agrupation_id',"=",$agrupation_id)
+    ->where('status','=',$status)
+    ->paginate(25);
+
+    foreach ($files as $file) {
+        $file->Agrupation;
+        $file->User;
+    }
+
+
+    return response()->json($files,200);
 
     }
 
