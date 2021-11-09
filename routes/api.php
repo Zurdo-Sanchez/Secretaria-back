@@ -41,6 +41,8 @@ Route::group([
         Route::get('', [FilesController::class, 'store']);
         Route::post('/update', [FilesController::class, 'edit']);
         Route::post('/search', [FilesController::class, 'search']);
+        Route::post('/validation_create', [FilesController::class, 'validation_create']);
+        Route::post('/create', [FilesController::class, 'create']);
         Route::get('total', [FilesController::class, 'total']);
   });
 
