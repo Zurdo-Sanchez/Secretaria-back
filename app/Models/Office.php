@@ -15,4 +15,4 @@ class Office extends Model
         'internal_phone'
     ];
 }
-}
+

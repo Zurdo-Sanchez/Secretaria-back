@@ -18,6 +18,7 @@ class CreateOfficesTable extends Migration
             $table->string('name');
             $table->string('code_sie');
             $table->string('internal_phone');
+            $table->string('email',30)->unique()->nullable();
             $table->timestamps();
         });
     }

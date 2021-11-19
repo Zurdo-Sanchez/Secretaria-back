@@ -18,12 +18,14 @@ class ForeignKey extends Migration
             $table->foreign('agrupation_id')->references('id')->on('agrupations');
             $table->bigInteger('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
+            $table->bigInteger('site_id')->unsigned();
+            $table->foreign('site_id')->references('id')->on('users');
         });
 
         Schema::table('external_passes', function (Blueprint $table) {
             $table->unsignedBigInteger('from')->unsigned();
             $table->foreign('from')->references('id')->on('offices');
-            $table->unsignedBigInteger('to')->unsigned();
+            $table->unsignedBigInteger('to')->unsigned()->nullable();
             $table->foreign('to')->references('id')->on('offices');
             $table->bigInteger('responsable')->unsigned();
             $table->foreign('responsable')->references('id')->on('users');
@@ -34,9 +36,9 @@ class ForeignKey extends Migration
         Schema::table('internal_passes', function (Blueprint $table) {
             $table->unsignedBigInteger('from')->unsigned();
             $table->foreign('from')->references('id')->on('users');
-            $table->unsignedBigInteger('to')->unsigned();
+            $table->unsignedBigInteger('to')->unsigned()->nullable();
             $table->foreign('to')->references('id')->on('users');
-            $table->bigInteger('responsable')->unsigned();
+            $table->bigInteger('responsable')->unsigned()->nullable();
             $table->foreign('responsable')->references('id')->on('users');
             $table->bigInteger('external_passe')->unsigned();
             $table->foreign('external_passe')->references('id')->on('external_passes');

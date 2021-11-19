@@ -3,20 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Models\Files;
-use Defuse\Crypto\File;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class FilesController extends Controller
 {
 
-    public function store()
+    public function store($status)
     {
-        $files = Files::orderBy("updated_at", "desc")
-            ->Paginate(25);
+
+        if ($status == 3) {
+            $files = Files::orderBy("updated_at", "desc")
+                ->Paginate(10);
+            }else{
+            $files = Files::where('status','=',$status)
+                ->orderBy("updated_at", "desc")
+                ->Paginate(10);
+        }
 
             foreach ($files as $file) {
                 $file->Agrupation;
                 $file->User;
+                $file->site = User::find($file->site_id);
             }
 
             return response()->json($files, 200);
@@ -65,11 +73,12 @@ class FilesController extends Controller
         ->where('agrupation_id',"LIKE",'%'.$agrupation_id.'%')
         ->where('status','=',$status)
         ->orderBy("updated_at", "desc")
-        ->paginate(25);
+        ->paginate(10);
 
         foreach ($files as $file) {
         $file->Agrupation;
         $file->User;
+        $file->site = User::find($file->site_id);
         }
         return response()->json($files,200);
 
@@ -89,6 +98,7 @@ class FilesController extends Controller
         foreach ($files as $file) {
             $file->Agrupation;
             $file->User;
+            $file->site = User::find($file->site_id);
             }
 
         return response()->json($files, 200);
@@ -104,13 +114,22 @@ class FilesController extends Controller
             'initiator'=> $request->initiator,
             'concept'=> $request->concept,
             'status'=> $request->status,
+            'site_id' => $request->site_id,
             'agrupation_id'=> $request->agrupation_id,
             'user_id'=> $request->user_id
             ]);
 
-            
+            $files = [
+                0 => $file
+            ];
 
-        return  response()->json($file,200);
+            foreach ($files as $file) {
+                $file->Agrupation;
+                $file->User;
+                $file->site = User::find($file->site_id);
+                }
+
+        return  response()->json($files,200);
     }
 
 

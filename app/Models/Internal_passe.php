@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ExternalPasseController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,27 +10,27 @@ class Internal_passe extends Model
     use HasFactory;
 
     protected $fillable =[
-        'from_id',
+        'from',
         'from_date',
         'response',
-        'to_id',
+        'to',
         'to_date',
         'status',
-        'responsable_id',
-        'externa_passe_id'
+        'responsable',
+        'external_passe'
     ];
 
-    public function from_id(){
-        return $this->belongsTo(AuthController::class,'from_id');
+    public function From(){
+        return $this->belongsTo(User::class,'from');
     }
-    public function to_id(){
-        return $this->belongsTo(AuthController::class,'to_id');
+    public function To(){
+        return $this->belongsTo(User::class,'to');
     }
-    public function responsable_id(){
-        return $this->belongsTo(AuthController::class,'responsable_id');
+    public function Responsable(){
+        return $this->belongsTo(User::class,'responsable');
     }
-    public function external_passe_id(){
-        return $this->belongsTo(ExternalPasseController::class,'external_passe_id');
+    public function External_passe(){
+        return $this->belongsTo(External_passe::class,'external_passe');
     }
 }
 

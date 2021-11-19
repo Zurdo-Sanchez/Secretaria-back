@@ -10,26 +10,33 @@ class External_passe extends Model
     use HasFactory;
 
     protected $fillable =[
-        'from_id',
+        'from',
         'from_date',
         'response',
-        'to_id',
+        'to',
         'to_date',
         'status',
-        'responsable_id',
-        'file_id'
+        'responsable',
+        'file'
     ];
 
-    public function from_id(){
-        return $this->belongsTo(AuthController::class,'from_id');
+    public function File()
+    {
+        return $this->belongsTo(Files::class,'file');
     }
-    public function to_id(){
-        return $this->belongsTo(AuthController::class,'to_id');
+
+    public function User()
+    {
+        return $this->belongsTo(User::class,'responsable');
     }
-    public function responsable_id(){
-        return $this->belongsTo(AuthController::class,'responsable_id');
+
+    public function From_Office()
+    {
+        return $this->belongsTo(Office::class,'from');
     }
-    public function file_id(){
-        return $this->belongsTo(FilesController::class,'file_id');
+
+    public function To_Office()
+    {
+        return $this->belongsTo(Office::class,'to');
     }
 }

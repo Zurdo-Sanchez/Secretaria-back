@@ -15,9 +15,9 @@ class CreateExternalPassesTable extends Migration
     {
         Schema::create('external_passes', function (Blueprint $table) {
             $table->id();
-            $table->string('from_date');
-            $table->string('response');
-            $table->string('to_date');
+            $table->timestamp('from_date');
+            $table->string('response')->nullable();
+            $table->timestamp('to_date')->nullable();
             $table->boolean('status');
             $table->timestamps();
         });

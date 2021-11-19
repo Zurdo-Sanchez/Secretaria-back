@@ -17,6 +17,8 @@ class Files extends Model
         'initiator',
         'concept',
         'status',
+        'site_id',
+        'site',
         'agrupation_id',
         'user_id'
     ];
