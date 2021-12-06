@@ -6,6 +6,8 @@ use App\Models\External_passe;
 use App\Models\Internal_passe;
 use App\Models\Files;
 use Illuminate\Http\Request;
+use PhpOffice\PhpWord\TemplateProcessor;
+
 
 class ExternalPasseController extends Controller
 {
@@ -113,17 +115,12 @@ public function search($file_id)
         $external_passe = External_passe::find($request->id);
 
         $external_passe->to = $request->to;
-        $external_passe->to_date = $request->to_date;
         $external_passe->status = $request->status;
         $external_passe->responsable = $request->responsable;
         $external_passe->save();
-
-        $file = Files::find($request->file_id);
-        $file->status = false;
-        $file->save();
-
         return response()->json($external_passe,200);
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -131,8 +128,30 @@ public function search($file_id)
      * @param  \App\Models\External_passe  $external_passe
      * @return \Illuminate\Http\Response
      */
-    public function destroy(External_passe $external_passe)
+    public function close($id)
     {
-        //
+        $external_passe = External_passe::find($id);
+        $external_passe->status = true;
+        $external_passe->to_date = date('Y-m-d H:i:s');
+        $external_passe->save();
+
+        $internal_passe = Internal_passe::where('external_passe', $id)
+        ->where('status', 0)
+        ->get();
+
+        foreach ($internal_passe as $passe) {
+
+            $aux_passe = Internal_passe::find($passe->id);
+            $aux_passe->status = 1;
+            $aux_passe->to_date = date('Y-m-d H:i:s');
+            $aux_passe->save();
+
+            }
+
+
+        return  response() -> json($internal_passe, 200);
+
     }
+
+
 }

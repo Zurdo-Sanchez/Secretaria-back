@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Files;
 use App\Models\User;
+use Faker\Core\Number;
 use Illuminate\Http\Request;
 
 class FilesController extends Controller
@@ -51,7 +52,7 @@ class FilesController extends Controller
             "total" => $active + $inactive
         ];
 
-        return response()->json($totalfile, 200);
+        return response($totalfile, 200);
 
     }
 
@@ -64,16 +65,36 @@ class FilesController extends Controller
         $concept  = $request->search_concept;
         $agrupation_id  = $request->search_agrupation_id;
         $status  = $request->search_status;
+        $site_id  = $request->search_site_id;
+        $per_page  = $request->search_per_page;
 
-        $files=Files::where('dependence_number','LIKE','%'.$dependence_number.'%')
-        ->where('central_number','LIKE','%'.$central_number.'%')
-        ->where('final_number','LIKE','%'.$final_number.'%')
-        ->where('initiator','LIKE','%'.$initiator.'%')
-        ->where('concept','LIKE','%'.$concept.'%')
-        ->where('agrupation_id',"LIKE",'%'.$agrupation_id.'%')
-        ->where('status','=',$status)
-        ->orderBy("updated_at", "desc")
-        ->paginate(10);
+        if ($request->search_site_id) {
+
+            $files=Files::where('dependence_number','LIKE','%'.$dependence_number.'%')
+            ->where('central_number','LIKE','%'.$central_number.'%')
+            ->where('final_number','LIKE','%'.$final_number.'%')
+            ->where('initiator','LIKE','%'.$initiator.'%')
+            ->where('concept','LIKE','%'.$concept.'%')
+            ->where('agrupation_id',"LIKE",'%'.$agrupation_id.'%')
+            ->where('status','=',$status)
+            ->where('site_id',"=",$site_id)
+
+            ->orderBy("updated_at", "desc")
+            ->paginate($per_page);
+
+        } else {
+            $files=Files::where('dependence_number','LIKE','%'.$dependence_number.'%')
+            ->where('central_number','LIKE','%'.$central_number.'%')
+            ->where('final_number','LIKE','%'.$final_number.'%')
+            ->where('initiator','LIKE','%'.$initiator.'%')
+            ->where('concept','LIKE','%'.$concept.'%')
+            ->where('agrupation_id',"LIKE",'%'.$agrupation_id.'%')
+            ->where('status','=',$status)
+
+            ->orderBy("updated_at", "desc")
+            ->paginate(10);
+        }
+
 
         foreach ($files as $file) {
         $file->Agrupation;
@@ -130,6 +151,18 @@ class FilesController extends Controller
                 }
 
         return  response()->json($files,200);
+    }
+
+
+    public function close( $file_id)
+    {
+
+                $file = Files::find($file_id);
+                $file->status = false;
+                $file->save();
+
+        return response()->json($file,200);
+
     }
 
 

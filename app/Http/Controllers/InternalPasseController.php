@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Internal_passe;
+use App\Models\External_passe;
 use App\Models\Files;
 use Illuminate\Http\Request;
 
@@ -69,7 +70,7 @@ class InternalPasseController extends Controller
     public function search($external_passe_id)
     {
         $internal_passes = Internal_passe::where('external_passe','=',$external_passe_id)
-        ->orderBy("from_date", "desc")
+        ->orderBy("from_date", "asc")
         ->Paginate(10);
 
           foreach ($internal_passes as $item) {
@@ -116,6 +117,11 @@ class InternalPasseController extends Controller
         $file = Files::find($request->file_id);
         $file->site_id = $request->to;
         $file->save();
+
+        $external_passe = External_passe::find($request->external_passe);
+        $external_passe->response = $request->response;
+        $external_passe->responsable = $request->to;
+        $external_passe->save();
 
         return response()->json($internal_passe,200);
     }
