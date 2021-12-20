@@ -1,21 +1,18 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\PEAJ;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Office extends Model
+class Sub_ejes extends Model
 {
     use HasFactory;
 
     protected $fillable =[
+        'number',
+        'eje_id',
         'name',
-        'internal_phone',
-        'code_sie',
-        'email',
-        'alternative_email',
-        'officer_in_charge'
+        'description'
     ];
 }
-

@@ -70,7 +70,7 @@ class InternalPasseController extends Controller
     public function search($external_passe_id)
     {
         $internal_passes = Internal_passe::where('external_passe','=',$external_passe_id)
-        ->orderBy("from_date", "asc")
+        ->orderBy("from_date", "desc")
         ->Paginate(10);
 
           foreach ($internal_passes as $item) {

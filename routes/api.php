@@ -102,6 +102,7 @@ Route::group([
     'prefix' => 'offices'
   ], function() {
         Route::get('', [OfficesController::class, 'store']);
+        Route::post('/search', [OfficesController::class, 'search']);
 
   });
 

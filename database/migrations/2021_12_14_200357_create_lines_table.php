@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateOfficesTable extends Migration
+class CreateLinesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,11 @@ class CreateOfficesTable extends Migration
      */
     public function up()
     {
-        Schema::create('offices', function (Blueprint $table) {
+        Schema::create('lines', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('Number')->unsigned()->unique();
             $table->string('name');
-            $table->string('code_sie');
-            $table->string('internal_phone');
-            $table->string('email',30)->unique()->nullable();
-            $table->string('alternative_email',30)->unique()->nullable();
-            $table->string('officer_in_charge',150)->unique()->nullable();
+            $table->string('description');
             $table->timestamps();
         });
     }
@@ -32,6 +29,6 @@ class CreateOfficesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('offices');
+        Schema::dropIfExists('lines');
     }
 }
