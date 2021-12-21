@@ -7,6 +7,8 @@ use App\Http\Controllers\FilesController;
 use App\Http\Controllers\OfficesController;
 use App\Http\Controllers\ExternalPasseController;
 use App\Http\Controllers\InternalPasseController;
+use App\Http\Controllers\ProvisTipoController;
+
 
 use App\Http\Controllers\GraphicsController;
 use Illuminate\Support\Facades\Route;
@@ -38,14 +40,6 @@ Route::group([
         Route::get('user', [AuthController::class, 'user']);
     });
 });
-
-
-Route::group([
-    'prefix' => 'asd'
-  ], function() {
-        Route::post('', [FilesController::class, 'prueba']);
-  });
-
 
 Route::group([
     'prefix' => 'files'
@@ -104,6 +98,12 @@ Route::group([
         Route::get('', [OfficesController::class, 'store']);
         Route::post('/search', [OfficesController::class, 'search']);
 
+  });
+
+  Route::group([
+    'prefix' => 'provis'
+  ], function() {
+        Route::get('', [ProvisTipoController::class, 'store']);
   });
 
   Route::group([
