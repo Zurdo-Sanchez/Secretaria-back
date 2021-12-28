@@ -104,6 +104,7 @@ Route::group([
     'prefix' => 'provis'
   ], function() {
         Route::get('', [ProvisTipoController::class, 'store']);
+        Route::post('/search', [ProvisTipoController::class, 'search']);
   });
 
   Route::group([

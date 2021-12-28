@@ -35,7 +35,12 @@ class ProvisTipoController extends Controller
      */
     public function store(Request $request)
     {
-        return response()->json(ProvisTipo::orderBy("name", "asc")->Paginate(10000),200);
+
+        $provis = ProvisTipo::orderBy("name", "asc")->Paginate(1);
+        foreach ($provis as $provi) {
+            $provi->Office;
+        }
+        return response()->json($provis,200);
     }
 
     /**
@@ -44,9 +49,27 @@ class ProvisTipoController extends Controller
      * @param  \App\Models\ProvisTipo  $provisTipo
      * @return \Illuminate\Http\Response
      */
-    public function show(ProvisTipo $provisTipo)
+    public function search(Request $request)
     {
-        //
+        $name = $request->name;
+        $office_id = $request->office_id;
+
+        if ($request->office_id) {
+            $provis = ProvisTipo::where('name','LIKE','%'.$name.'%')
+                                ->where('office_id',"=",$office_id)
+                                ->orderBy("name", "asc")->Paginate(3);
+            foreach ($provis as $provi) {
+                $provi->Office;
+            }
+             }else{
+
+                $provis = ProvisTipo::where('name','LIKE','%'.$name.'%')
+                ->orderBy("name", "asc")->Paginate(3);
+                    foreach ($provis as $provi) {
+                    $provi->Office;
+                }
+        }
+        return response()->json($provis,200);
     }
 
     /**

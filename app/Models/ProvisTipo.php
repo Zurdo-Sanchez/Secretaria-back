@@ -11,6 +11,12 @@ class ProvisTipo extends Model
 
     protected $fillable = [
         'name',
-        'text'
+        'text',
+        'office_id'
         ];
-}
+
+        public function Office()
+        {
+            return $this->belongsTo(Office::class,'office_id');
+        }
+    }
