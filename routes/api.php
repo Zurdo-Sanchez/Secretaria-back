@@ -31,6 +31,7 @@ Route::group([
     Route::post('login', [ AuthController::class, 'login']);
     Route::post('signup', [AuthController::class, 'signUp']);
     Route::get('list', [AuthController::class, 'store']);
+    Route::post('edit', [AuthController::class, 'edit']);
 
 
     Route::group([

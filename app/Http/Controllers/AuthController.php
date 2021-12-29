@@ -91,4 +91,34 @@ public function store(){
 
    return response()->json($users,201);
     }
+
+public function edit(Request $request)
+    {
+        $Email = $request->email;
+        $Password = $request->password;
+
+        $credentials = request(['email', 'password']);
+
+        $user = User::find($request->id);
+
+
+        if (!Auth::attempt($credentials))
+        return response()->json([
+            'message' => 'Unauthorized'
+        ], 401);
+
+         $name = $request->newName;
+         $email = $request->newEmail;
+         $phone = $request->newPhone;
+         $password = bcrypt($request->newPassword);
+
+          $user->name = $name;
+          $user->email = $email;
+          $user->phone = $phone;
+          $user->password = $password;
+          $user->save();
+
+         return response()->json($user,200);
+
+    }
 }
