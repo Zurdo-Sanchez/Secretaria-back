@@ -55,9 +55,21 @@ class OfficesController extends Controller
      * @param  \App\Models\Offices  $offices
      * @return \Illuminate\Http\Response
      */
-    public function edit(Office $offices)
+    public function edit(Request $request)
     {
-        //
+        $office = Office::find($request->id);
+
+        $office->internal_phone = $request->internal_phone;
+        $office->email = $request->email;
+        $office->alternative_email = $request->alternative_email;
+        if ($request->officer_in_charge == null) {
+            $office->officer_in_charge = "";
+        }else{
+        $office->officer_in_charge = $request->officer_in_charge;
+        }
+        $office->save();
+
+        return response()->json($office);
     }
 
     /**

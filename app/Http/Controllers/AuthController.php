@@ -99,7 +99,7 @@ public function edit(Request $request)
 
         $credentials = request(['email', 'password']);
 
-        $user = User::find($request->id);
+        $user = User::find($request->newId);
 
 
         if (!Auth::attempt($credentials))
@@ -107,16 +107,20 @@ public function edit(Request $request)
             'message' => 'Unauthorized'
         ], 401);
 
-         $name = $request->newName;
-         $email = $request->newEmail;
-         $phone = $request->newPhone;
-         $password = bcrypt($request->newPassword);
+          $name = $request->newName;
+          $email = $request->newEmail;
+          $phone = $request->newPhone;
+          $password = bcrypt($request->newPassword);
 
-          $user->name = $name;
-          $user->email = $email;
-          $user->phone = $phone;
-          $user->password = $password;
-          $user->save();
+           $user->name = $name;
+           $user->email = $email;
+
+           if ($request->newPassword != null ) {
+            $user->password = $password;
+           }
+
+           $user->phone = $phone;
+           $user->save();
 
          return response()->json($user,200);
 

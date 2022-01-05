@@ -98,6 +98,7 @@ Route::group([
   ], function() {
         Route::get('', [OfficesController::class, 'store']);
         Route::post('/search', [OfficesController::class, 'search']);
+        Route::post('', [OfficesController::class, 'edit']);
 
   });
 
