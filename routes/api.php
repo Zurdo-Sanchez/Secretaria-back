@@ -71,6 +71,7 @@ Route::group([
     'prefix' => 'exports'
   ], function() {
         Route::get('/{id}', [ExportsController::class, 'ExportToWord']);
+        Route::post('/offices', [ExportsController::class, 'OfficesExport']);
 
   });
 

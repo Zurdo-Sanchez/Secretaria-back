@@ -12,6 +12,7 @@
         "laravel/passport": "^10.2",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
+        "phpoffice/phpspreadsheet": "^1.21",
         "phpoffice/phpword": "dev-master"
     },
     "require-dev": {

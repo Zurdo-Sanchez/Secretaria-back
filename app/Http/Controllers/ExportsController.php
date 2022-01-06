@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Files;
+use Illuminate\Http\Request;
+
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
+USE App\Models\Office;
 use App\Models\External_passe;
-use Facade\FlareClient\Http\Response;
 use Illuminate\Support\Arr;
 use PhpOffice\PhpWord\TemplateProcessor;
 
@@ -41,6 +46,51 @@ class ExportsController extends Controller
         return response()->download('static/temp/'.Arr::get($data,'Files_number').'.docx');
 
     }
+
+
+    public static function OfficesExport(Request $request){
+
+        $rows = 4;
+        $aux = 1;
+
+        $name = $request->name;
+        $internal_phone = $request->internal;
+        $code_sie = $request->SIE;
+        $officer_in_charge = $request->officer_in_charge;
+        $order_by = $request->order_by;
+        $order = $request->order;
+
+         $employees = Office::where('name','LIKE','%'.$name.'%')
+                    ->where('internal_phone','LIKE','%'.$internal_phone.'%')
+                    ->where('code_sie','LIKE','%'.$code_sie.'%')
+                    ->where('officer_in_charge',"LIKE",'%'.$officer_in_charge.'%')
+                    ->orderBy($order_by, $order)
+                    ->get();
+
+
+        $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader("Xls");
+        $spreadsheet = $reader->load('static/Modelo Listado de Dependencias.xls');
+        $sheet = $spreadsheet->getActiveSheet();
+
+        foreach($employees as $empDetails){
+        $sheet->setCellValue('A' . $rows,  $aux);
+        $sheet->setCellValue('B' . $rows, $empDetails['name']);
+        $sheet->setCellValue('C' . $rows, $empDetails['internal_phone']);
+        $sheet->setCellValue('D' . $rows, $empDetails['code_sie']);
+        $sheet->setCellValue('E' . $rows, $empDetails['email']);
+        $sheet->setCellValue('F' . $rows, $empDetails['alternative_email']);
+        $sheet->setCellValue('G' . $rows, $empDetails['officer_in_charge']);
+        $rows++;
+        $aux++;
+        }
+
+        $fileName = "Listado de dependencias.xlsx";
+        $writer = new Xlsx($spreadsheet);
+
+        $writer->save('static/temp/'.$fileName);
+        response()->download( 'static/temp/'.$fileName);
+
+        }
 }
 
 

@@ -79,21 +79,6 @@ class OfficesController extends Controller
      * @param  \App\Models\Offices  $offices
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Office $offices)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Offices  $offices
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Office $offices)
-    {
-        //
-    }
 
     public function search(Request $request){
 
