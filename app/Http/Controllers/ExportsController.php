@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Writer\Xls;
 
 USE App\Models\Office;
 use App\Models\External_passe;
@@ -28,10 +26,10 @@ class ExportsController extends Controller
         $data = Arr::add($data, 'to_sie_code', $auxT->code_sie);
         $data = Arr::add($data, 'response', $auxP->response);
 
-// Crear una instancia, los parámetros se pasan a la dirección del archivo de plantilla
+        // Crear una instancia, los parámetros se pasan a la dirección del archivo de plantilla
         $templateProcessor = new TemplateProcessor('static/Model Provi.docx');
 
-// Reemplaza (establece) el valor de la variable. Los caracteres que reemplacé durante la prueba eran relativamente largos, así que lo acorté aquí
+        // Reemplaza (establece) el valor de la variable. Los caracteres que reemplacé durante la prueba eran relativamente largos, así que lo acorté aquí
 
         $templateProcessor-> setValue ('number', Arr::get($data,'Files_number'));
         $templateProcessor-> setValue ('concept', Arr::get($data,'concept'));
@@ -39,19 +37,26 @@ class ExportsController extends Controller
         $templateProcessor-> setValue ('to', Arr::get($data,'to'));
         $templateProcessor-> setValue ('to_sie_code', Arr::get($data,'to_sie_code'));
 
- // guardar documento
+        // guardar documento
 
         $templateProcessor->saveAs('static/temp/'.Arr::get($data,'Files_number').'.docx');
 
         return response()->download('static/temp/'.Arr::get($data,'Files_number').'.docx');
-
     }
 
+    public function Excel()
+    {
+        return response()->json('áca response', 200);
+    }
 
-    public static function OfficesExport(Request $request){
+    public function OfficesExport(Request $request)
+    {
 
         $rows = 4;
         $aux = 1;
+
+        $fileName = "dependencias.pdf";
+        $path = 'static/temp/';
 
         $name = $request->name;
         $internal_phone = $request->internal;
@@ -60,12 +65,12 @@ class ExportsController extends Controller
         $order_by = $request->order_by;
         $order = $request->order;
 
-         $employees = Office::where('name','LIKE','%'.$name.'%')
-                    ->where('internal_phone','LIKE','%'.$internal_phone.'%')
-                    ->where('code_sie','LIKE','%'.$code_sie.'%')
-                    ->where('officer_in_charge',"LIKE",'%'.$officer_in_charge.'%')
-                    ->orderBy($order_by, $order)
-                    ->get();
+        $employees = Office::where('name','LIKE','%'.$name.'%')
+        ->where('internal_phone','LIKE','%'.$internal_phone.'%')
+        ->where('code_sie','LIKE','%'.$code_sie.'%')
+        ->where('officer_in_charge',"LIKE",'%'.$officer_in_charge.'%')
+        ->orderBy($order_by, $order)
+        ->get();
 
 
         $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader("Xls");
@@ -73,24 +78,25 @@ class ExportsController extends Controller
         $sheet = $spreadsheet->getActiveSheet();
 
         foreach($employees as $empDetails){
-        $sheet->setCellValue('A' . $rows,  $aux);
-        $sheet->setCellValue('B' . $rows, $empDetails['name']);
-        $sheet->setCellValue('C' . $rows, $empDetails['internal_phone']);
-        $sheet->setCellValue('D' . $rows, $empDetails['code_sie']);
-        $sheet->setCellValue('E' . $rows, $empDetails['email']);
-        $sheet->setCellValue('F' . $rows, $empDetails['alternative_email']);
-        $sheet->setCellValue('G' . $rows, $empDetails['officer_in_charge']);
-        $rows++;
-        $aux++;
+            $sheet->setCellValue('A' . $rows,  $aux);
+            $sheet->setCellValue('B' . $rows, $empDetails['name']);
+            $sheet->setCellValue('C' . $rows, $empDetails['internal_phone']);
+            $sheet->setCellValue('D' . $rows, $empDetails['code_sie']);
+            $sheet->setCellValue('E' . $rows, $empDetails['email']);
+            $sheet->setCellValue('F' . $rows, $empDetails['alternative_email']);
+            $sheet->setCellValue('G' . $rows, $empDetails['officer_in_charge']);
+            $rows++;
+            $aux++;
         }
 
-        $fileName = "Listado de dependencias.xlsx";
-        $writer = new Xlsx($spreadsheet);
+        $writer = new Xls($spreadsheet);
+        $type = 'blob';
+        $header= ['Content-Type', $type];
+        $writer->save($path.$fileName);
 
-        $writer->save('static/temp/'.$fileName);
-        response()->download( 'static/temp/'.$fileName);
+        return response()->Download('static/temp/'.$fileName);
 
-        }
+    }
 }
 
 

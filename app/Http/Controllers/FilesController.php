@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Files;
+use App\Models\External_passe;
 use App\Models\User;
-use Faker\Core\Number;
 use Illuminate\Http\Request;
 
 class FilesController extends Controller
@@ -92,7 +92,7 @@ class FilesController extends Controller
             ->where('status','=',$status)
 
             ->orderBy("updated_at", "desc")
-            ->paginate(10);
+            ->paginate($per_page);
         }
 
 

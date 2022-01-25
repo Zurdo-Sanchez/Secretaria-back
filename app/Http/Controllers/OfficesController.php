@@ -96,6 +96,9 @@ class OfficesController extends Controller
                     ->orderBy($order_by, $order)
                     ->paginate(10);
 
+
+
+
             return response()->json($offices,200);
 
 
