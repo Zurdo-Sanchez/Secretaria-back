@@ -9,6 +9,9 @@ use App\Http\Controllers\ExternalPasseController;
 use App\Http\Controllers\InternalPasseController;
 use App\Http\Controllers\ProvisTipoController;
 
+use App\Http\Controllers\NormativasController;
+use App\Http\Controllers\NormativasTypeController;
+use App\Http\Controllers\NormativasAgrupationsController;
 
 use App\Http\Controllers\GraphicsController;
 use Illuminate\Support\Facades\Route;
@@ -50,7 +53,7 @@ Route::group([
         Route::post('/search', [FilesController::class, 'search']);
         Route::post('/validation_create', [FilesController::class, 'validation_create']);
         Route::post('/create', [FilesController::class, 'create']);
-        Route::get ('/total', [FilesController::class, 'total']);
+        Route::get ('/total/{id}', [FilesController::class, 'total']);
         Route::get('/close/{status}', [FilesController::class, 'close']);
 
   });
@@ -104,6 +107,20 @@ Route::group([
 
   });
 
+
+  Route::group([
+    'prefix' => 'normativas'
+  ], function() {
+        Route::post('/search', [NormativasController::class, 'search']);
+        Route::post('/create', [NormativasController::class, 'create']);
+        Route::get('/export/{name}', [ExportsController::class, 'exportNormativa']);
+        Route::get('/see/{name}', [ExportsController::class, 'seeNormativa']);
+        Route::get('/agrupations', [NormativasAgrupationsController::class, 'store']);
+        Route::get('/types', [NormativasTypeController::class, 'store']);
+
+  });
+
+
   Route::group([
     'prefix' => 'provis'
   ], function() {
@@ -115,7 +132,7 @@ Route::group([
     'prefix' => 'graphics'
   ], function() {
         Route::get('/pie', [GraphicsController::class, 'pie']);
-        Route::get('/line', [GraphicsController::class, 'line']);
+        Route::get('/line/{year} ', [GraphicsController::class, 'line']);
 
   });
 

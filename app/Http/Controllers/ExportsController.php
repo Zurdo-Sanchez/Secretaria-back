@@ -8,6 +8,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xls;
 
 USE App\Models\Office;
 use App\Models\External_passe;
+use App\Models\normativas;
 use Illuminate\Support\Arr;
 use PhpOffice\PhpWord\TemplateProcessor;
 
@@ -49,54 +50,70 @@ class ExportsController extends Controller
         return response()->json('áca response', 200);
     }
 
-    public function OfficesExport(Request $request)
-    {
+     public function exportNormativa($name){
 
-        $rows = 4;
-        $aux = 1;
+        $path = 'static/Normativas/'.$name;
+         return response()->Download($path);
+     }
 
-        $fileName = "dependencias.pdf";
-        $path = 'static/temp/';
-
-        $name = $request->name;
-        $internal_phone = $request->internal;
-        $code_sie = $request->SIE;
-        $officer_in_charge = $request->officer_in_charge;
-        $order_by = $request->order_by;
-        $order = $request->order;
-
-        $employees = Office::where('name','LIKE','%'.$name.'%')
-        ->where('internal_phone','LIKE','%'.$internal_phone.'%')
-        ->where('code_sie','LIKE','%'.$code_sie.'%')
-        ->where('officer_in_charge',"LIKE",'%'.$officer_in_charge.'%')
-        ->orderBy($order_by, $order)
-        ->get();
+    public function seeNormativa($name){
 
 
-        $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader("Xls");
-        $spreadsheet = $reader->load('static/Modelo Listado de Dependencias.xls');
-        $sheet = $spreadsheet->getActiveSheet();
+       $path = 'static/Normativas/'.$name;
 
-        foreach($employees as $empDetails){
-            $sheet->setCellValue('A' . $rows,  $aux);
-            $sheet->setCellValue('B' . $rows, $empDetails['name']);
-            $sheet->setCellValue('C' . $rows, $empDetails['internal_phone']);
-            $sheet->setCellValue('D' . $rows, $empDetails['code_sie']);
-            $sheet->setCellValue('E' . $rows, $empDetails['email']);
-            $sheet->setCellValue('F' . $rows, $empDetails['alternative_email']);
-            $sheet->setCellValue('G' . $rows, $empDetails['officer_in_charge']);
-            $rows++;
-            $aux++;
-        }
-
-        $writer = new Xls($spreadsheet);
-        $type = 'blob';
-        $header= ['Content-Type', $type];
-        $writer->save($path.$fileName);
-
-        return response()->Download('static/temp/'.$fileName);
-
+        return Response()->make(file_get_contents($path), 200, [
+        'Content-Type' => 'application/pdf',
+        ]);
     }
+
+     public function OfficesExport(Request $request)
+     {
+
+         $rows = 4;
+         $aux = 1;
+
+         $fileName = "dependencias.pdf";
+         $path = 'static/temp/';
+
+         $name = $request->name;
+         $internal_phone = $request->internal;
+         $code_sie = $request->SIE;
+         $officer_in_charge = $request->officer_in_charge;
+         $order_by = $request->order_by;
+         $order = $request->order;
+
+         $employees = Office::where('name','LIKE','%'.$name.'%')
+         ->where('internal_phone','LIKE','%'.$internal_phone.'%')
+         ->where('code_sie','LIKE','%'.$code_sie.'%')
+         ->where('officer_in_charge',"LIKE",'%'.$officer_in_charge.'%')
+         ->orderBy($order_by, $order)
+         ->get();
+
+
+         $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader("Xls");
+         $spreadsheet = $reader->load('static/Modelo Listado de Dependencias.xls');
+         $sheet = $spreadsheet->getActiveSheet();
+
+         foreach($employees as $empDetails){
+             $sheet->setCellValue('A' . $rows,  $aux);
+             $sheet->setCellValue('B' . $rows, $empDetails['name']);
+             $sheet->setCellValue('C' . $rows, $empDetails['internal_phone']);
+             $sheet->setCellValue('D' . $rows, $empDetails['code_sie']);
+             $sheet->setCellValue('E' . $rows, $empDetails['email']);
+             $sheet->setCellValue('F' . $rows, $empDetails['alternative_email']);
+             $sheet->setCellValue('G' . $rows, $empDetails['officer_in_charge']);
+             $rows++;
+             $aux++;
+         }
+
+         $writer = new Xls($spreadsheet);
+         $type = 'blob';
+        $header= ['Content-Type', $type];
+         $writer->save($path.$fileName);
+
+         return response()->Download('static/temp/'.$fileName);
+
+     }
 }
 
 

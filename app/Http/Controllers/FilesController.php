@@ -41,15 +41,16 @@ class FilesController extends Controller
         return response()->json('File Update', 200);
     }
 
-    public function total(){
+    public function total($id){
 
         $active= count(Files::where('status','=',true)->get());
         $inactive= count(Files::where('status','=',false)->get());
-
+        $user = count(Files::where('status','=',true)->where('site_id','=',$id)->get());
         $totalfile = [
             "active" => $active,
             "inactive" => $inactive,
-            "total" => $active + $inactive
+            "total" => $active + $inactive,
+            "totalUser"=>$user,
         ];
 
         return response($totalfile, 200);

@@ -32,12 +32,12 @@ class GraphicsController extends Controller
 
     }
 
-    public function line(){
+    public function line($year){
 
         $data=[];
 
         for ($i=1; $i < 13; $i++) {
-            $externalPasse = External_passe::WhereYear('created_at',"=",2021)
+            $externalPasse = External_passe::WhereYear('created_at',"=",$year)
             ->whereMonth('created_at', '=', $i)
             ->get();
 
