@@ -9,6 +9,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xls;
 USE App\Models\Office;
 use App\Models\External_passe;
 use App\Models\normativas;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Arr;
 use PhpOffice\PhpWord\TemplateProcessor;
 
@@ -52,18 +53,28 @@ class ExportsController extends Controller
 
      public function exportNormativa($name){
 
-        $path = 'static/Normativas/'.$name;
-         return response()->Download($path);
+         $headers = ['Content-Type' => 'application/pdf',];
+         //$path = 'static/Normativas/'.$name;
+         $path = 'public/Normativas/'.$name;
+         return Storage::Download($path);
+
+
+
      }
 
     public function seeNormativa($name){
 
 
-       $path = 'static/Normativas/'.$name;
+       //$path = 'static/Normativas/'.$name;
 
-        return Response()->make(file_get_contents($path), 200, [
-        'Content-Type' => 'application/pdf',
-        ]);
+       //  return Response()->make(file_get_contents($path), 200, [
+           //  'Content-Type' => 'application/pdf',
+           //  ]);
+
+         $path = storage_path('app/public/Normativas/'.$name);
+         return response()->make(file_get_contents($path), 200, [
+            'Content-Type' => 'application/pdf',
+            ]);
     }
 
      public function OfficesExport(Request $request)

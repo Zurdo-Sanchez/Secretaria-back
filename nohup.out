@@ -1,0 +1,2 @@
+Starting Laravel development server: http://10.4.12.14:8000
+[Fri Feb  4 16:15:45 2022] Failed to listen on 10.4.12.14:8000 (reason: Cannot assign requested address)

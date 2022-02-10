@@ -86,7 +86,8 @@ public function user(Request $request)
 
 public function store(){
 
-    $users = User::orderBy("name", "asc")
+    $users = User::where("office_id","=","23")
+    ->orderBy("name", "asc")
     ->get();
 
    return response()->json($users,201);

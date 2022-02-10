@@ -23,7 +23,9 @@ class User extends Authenticatable
         'password',
         'phone',
         'SCE',
-        'PEAJ'
+        'PEAJ',
+        'NOTO',
+        'dependence_id',
     ];
 
     /**

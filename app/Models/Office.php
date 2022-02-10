@@ -17,5 +17,10 @@ class Office extends Model
         'alternative_email',
         'officer_in_charge'
     ];
-}
 
+
+    public function Dependence()
+    {
+        return $this->belongsTo(Office::class,'dependence_id');
+}
+}

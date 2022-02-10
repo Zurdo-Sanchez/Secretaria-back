@@ -41,7 +41,13 @@ class GraphicsController extends Controller
             ->whereMonth('created_at', '=', $i)
             ->get();
 
-            $aux=["mount"=>$i, "total"=> count($externalPasse)];
+            $outPasse = External_passe::WhereYear('updated_at',"=",$year)
+            ->whereMonth('updated_at', '=', $i)
+            ->where('status','=',1)
+            ->get();
+
+
+            $aux=["mount"=>$i, "total"=> count($externalPasse), "out"=> count($outPasse)];
             array_push($data,$aux);
         }
 

@@ -12,6 +12,7 @@ use App\Http\Controllers\ProvisTipoController;
 use App\Http\Controllers\NormativasController;
 use App\Http\Controllers\NormativasTypeController;
 use App\Http\Controllers\NormativasAgrupationsController;
+use App\Http\Controllers\NotObjetionsController;
 
 use App\Http\Controllers\GraphicsController;
 use Illuminate\Support\Facades\Route;
@@ -135,5 +136,13 @@ Route::group([
         Route::get('/line/{year} ', [GraphicsController::class, 'line']);
 
   });
+
+  Route::group([
+    'prefix' => 'not-objetions'
+  ], function() {
+        Route::get('', [NotObjetionsController::class, 'store']);
+       // Route::post('/search', [ProvisTipoController::class, 'search']);
+  });
+
 
 
