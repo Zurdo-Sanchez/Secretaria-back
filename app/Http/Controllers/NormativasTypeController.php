@@ -35,7 +35,7 @@ class NormativasTypeController extends Controller
      */
     public function store()
     {
-        $list = normativasType::orderBy("name", "desc")->get();
+        $list = normativasType::orderBy("id", "asc")->get();
 
         return response()->json($list,200);
     }
