@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use SebastianBergmann\Environment\Console;
 use Symfony\Component\HttpFoundation\Response;
 
 class NormativasController extends Controller
@@ -33,29 +34,46 @@ class NormativasController extends Controller
         //$dest = '/var/www/public/normativas/';
         $dest ='home/lberraz/public_html/new_sec_back/public/static/normativas';
 
-        $normativa=normativas::create([
-            'name'=> $request->name,
-            'number'=> $request->number,
-            'year'=> $request->year,
-            'reference'=> $request->reference,
-            'type_id'=> $request->type,
-            'agrupation_id'=> $request->agrupation,
-          ]);
 
+        $type = $request->type;
+        $number = $request->number;
+        $year = $request->year;
 
-        $pdf = base64_decode($request->file);
+        $Normativas = normativas::
+        where('type_id','LIKE',$type)
+        ->where('number','LIKE',$number)
+        ->where('year','LIKE',$year)
+        ->get();
 
-          if(Storage::disk('public')->put('Normativas/'.$request->name, $pdf)){
-
-            return response()->json($request,200);
-
+        if (sizeOf($Normativas)) {
+            return response()->json('La normativa ya existe', 200);
         }else{
 
-            log("fuck!!",500);
+             $normativa=normativas::create([
+                 'name'=> $request->name,
+                 'number'=> $request->number,
+                 'year'=> $request->year,
+                 'reference'=> $request->reference,
+                 'type_id'=> $request->type,
+                 'agrupation_id'=> $request->agrupation,
+               ]);
+
+
+             $pdf = base64_decode($request->file);
+
+               if(Storage::disk('public')->put('Normativas/'.$request->name, $pdf)){
+
+                 return response()->json($request,200);
+
+             }else{
+
+                 log("fuck!!",500);
+             }
+
+             Storage::disk('public/Normativas/')->move($request->name, $dest.$request->name);
+
+            return response()->json('Normativa Cargada', 200);
         }
-
-        Storage::disk('public/Normativas/')->move($request->name, $dest.$request->name);
-
 
     }
 

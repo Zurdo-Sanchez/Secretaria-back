@@ -8,7 +8,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xls;
 
 USE App\Models\Office;
 use App\Models\External_passe;
-use App\Models\normativas;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Arr;
 use PhpOffice\PhpWord\TemplateProcessor;
@@ -51,25 +51,13 @@ class ExportsController extends Controller
         return response()->json('áca response', 200);
     }
 
-     public function exportNormativa($name){
+    public function exportNormativa($name){
 
-         $headers = ['Content-Type' => 'application/pdf',];
-         //$path = 'static/Normativas/'.$name;
          $path = 'public/Normativas/'.$name;
          return Storage::Download($path);
-
-
-
-     }
+    }
 
     public function seeNormativa($name){
-
-
-       //$path = 'static/Normativas/'.$name;
-
-       //  return Response()->make(file_get_contents($path), 200, [
-           //  'Content-Type' => 'application/pdf',
-           //  ]);
 
          $path = storage_path('app/public/Normativas/'.$name);
          return response()->make(file_get_contents($path), 200, [
@@ -77,53 +65,52 @@ class ExportsController extends Controller
             ]);
     }
 
-     public function OfficesExport(Request $request)
-     {
+     public function OfficesExport(Request $request){
 
-         $rows = 4;
-         $aux = 1;
+        //  $rows = 4;
+        //  $aux = 1;
 
-         $fileName = "dependencias.pdf";
-         $path = 'static/temp/';
+        //  $fileName = "dependencias.xls";
+        //  $path = 'static/temp/';
 
-         $name = $request->name;
-         $internal_phone = $request->internal;
-         $code_sie = $request->SIE;
-         $officer_in_charge = $request->officer_in_charge;
-         $order_by = $request->order_by;
-         $order = $request->order;
+        //  $name = $request->name;
+        //  $internal_phone = $request->internal;
+        //  $code_sie = $request->SIE;
+        //  $officer_in_charge = $request->officer_in_charge;
+        //  $order_by = $request->order_by;
+        //  $order = $request->order;
 
-         $employees = Office::where('name','LIKE','%'.$name.'%')
-         ->where('internal_phone','LIKE','%'.$internal_phone.'%')
-         ->where('code_sie','LIKE','%'.$code_sie.'%')
-         ->where('officer_in_charge',"LIKE",'%'.$officer_in_charge.'%')
-         ->orderBy($order_by, $order)
-         ->get();
+        //  $employees = Office::where('name','LIKE','%'.$name.'%')
+        //  ->where('internal_phone','LIKE','%'.$internal_phone.'%')
+        //  ->where('code_sie','LIKE','%'.$code_sie.'%')
+        //  ->where('officer_in_charge',"LIKE",'%'.$officer_in_charge.'%')
+        //  ->orderBy($order_by, $order)
+        //  ->get();
 
 
-         $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader("Xls");
-         $spreadsheet = $reader->load('static/Modelo Listado de Dependencias.xls');
-         $sheet = $spreadsheet->getActiveSheet();
+        //  $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader("Xls");
+        //  $spreadsheet = $reader->load('static/Modelo Listado de Dependencias.xls');
+        //  $sheet = $spreadsheet->getActiveSheet();
 
-         foreach($employees as $empDetails){
-             $sheet->setCellValue('A' . $rows,  $aux);
-             $sheet->setCellValue('B' . $rows, $empDetails['name']);
-             $sheet->setCellValue('C' . $rows, $empDetails['internal_phone']);
-             $sheet->setCellValue('D' . $rows, $empDetails['code_sie']);
-             $sheet->setCellValue('E' . $rows, $empDetails['email']);
-             $sheet->setCellValue('F' . $rows, $empDetails['alternative_email']);
-             $sheet->setCellValue('G' . $rows, $empDetails['officer_in_charge']);
-             $rows++;
-             $aux++;
-         }
+        //  foreach($employees as $empDetails){
+        //      $sheet->setCellValue('A' . $rows,  $aux);
+        //      $sheet->setCellValue('B' . $rows, $empDetails['name']);
+        //      $sheet->setCellValue('C' . $rows, $empDetails['internal_phone']);
+        //      $sheet->setCellValue('D' . $rows, $empDetails['code_sie']);
+        //      $sheet->setCellValue('E' . $rows, $empDetails['email']);
+        //      $sheet->setCellValue('F' . $rows, $empDetails['alternative_email']);
+        //      $sheet->setCellValue('G' . $rows, $empDetails['officer_in_charge']);
+        //      $rows++;
+        //      $aux++;
+        //  }
 
-         $writer = new Xls($spreadsheet);
-         $type = 'blob';
-        $header= ['Content-Type', $type];
-         $writer->save($path.$fileName);
+        // json_encode($spreadsheet);
+        // $writer = new Xls($spreadsheet);
+        // $writer->save($path.$fileName);
 
-         return response()->Download('static/temp/'.$fileName);
 
+        $path = 'public/Normativas/dependencias.xls';
+        return Storage::Download($path);
      }
 }
 

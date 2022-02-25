@@ -1,18 +1,27 @@
 <?php
 
 use App\Http\Controllers\AgrupationsController;
+
 use App\Http\Controllers\AuthController;
+
 use App\Http\Controllers\ExportsController;
+
 use App\Http\Controllers\FilesController;
+
 use App\Http\Controllers\OfficesController;
+
 use App\Http\Controllers\ExternalPasseController;
+
 use App\Http\Controllers\InternalPasseController;
+
 use App\Http\Controllers\ProvisTipoController;
 
 use App\Http\Controllers\NormativasController;
 use App\Http\Controllers\NormativasTypeController;
 use App\Http\Controllers\NormativasAgrupationsController;
-use App\Http\Controllers\NotObjetionsController;
+
+use App\Http\Controllers\PostItForUserController;
+use App\Http\Controllers\PostItController;
 
 use App\Http\Controllers\GraphicsController;
 use Illuminate\Support\Facades\Route;
@@ -68,9 +77,9 @@ Route::group([
         Route::post('/search', [ExternalPasseController::class, 'search']);
         Route::get('/{file_id}', [ExternalPasseController::class, 'search']);
         Route::post('/create', [ExternalPasseController::class, 'create']);
-        Route::get('/exports', [ExportsController::class, 'ExportToWord']);
-
   });
+
+
   Route::group([
     'prefix' => 'exports'
   ], function() {
@@ -79,6 +88,13 @@ Route::group([
         Route::get('/excel', [ExportsController::class, 'Excel']);
 
   });
+  Route::group([
+    'prefix' => 'exportExcel'
+  ], function() {
+       Route::post('', [ExportsController::class, 'OfficesExport']);
+
+  });
+
 
   Route::group([
     'prefix' => 'internal_passe'
@@ -138,10 +154,14 @@ Route::group([
   });
 
   Route::group([
-    'prefix' => 'not-objetions'
+    'prefix' => 'postit'
   ], function() {
-        Route::get('', [NotObjetionsController::class, 'store']);
-       // Route::post('/search', [ProvisTipoController::class, 'search']);
+        Route::get('/{id}', [PostItForUserController::class, 'store']);
+        Route::post('/create', [PostItController::class, 'create']);
+        Route::post('/edit', [PostItController::class, 'edit']);
+        Route::post('/share', [PostItForUserController::class, 'share']);
+        Route::get('/destroy/{id}', [PostItForUserController::class, 'destroy']);
+
   });
 
 
